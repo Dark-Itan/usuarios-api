@@ -3,7 +3,10 @@
 API RESTful para la gestión de usuarios con autenticación básica. Desarrollada con Spring Boot 3, PostgreSQL y arquitectura en capas siguiendo principios SOLID.
 
 **Autor:** Geovany Guadalupe Gomez Rodas  
+
 **Repositorio:** https://github.com/Dark-Itan/usuarios-api
+
+**API en producción:** https://usuarios-api-production-2de8.up.railway.app
 
 ---
 
