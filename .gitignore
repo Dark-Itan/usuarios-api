@@ -47,7 +47,6 @@ bin/
 .env.production
 
 ### Scripts locales ###
-run.ps1
 
 ### Logs ###
 *.log
