@@ -1,0 +1,268 @@
+{
+  "info": {
+    "_postman_id": "f7b33777-4407-4922-a0f8-1b62017f17ee",
+    "name": "Usuarios API - Producción",
+    "description": "StartFragmentAPI RESTful para gestión de usuarios con Spring BootEndFragment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49241706",
+    "_collection_link": "https://go.postman.co/collection/49241706-f7b33777-4407-4922-a0f8-1b62017f17ee?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": []
+    },
+    {
+      "name": "Usuarios",
+      "item": []
+    },
+    {
+      "name": "Registrar Usuario",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var jsonData = pm.response.json();\nif (jsonData.id) {\n    pm.collectionVariables.set(\"user_id\", jsonData.id);\n    console.log(\"user_id guardado:\", jsonData.id);\n} else if (jsonData.data && jsonData.data.id) {\n    pm.collectionVariables.set(\"user_id\", jsonData.data.id);\n    console.log(\"user_id guardado:\", jsonData.data.id);\n}\npm.test(\"Registro exitoso\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Geovany\",\n  \"email\": \"geovany.test2026@example.com\",\n  \"password\": \"password123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "register"
+          ]
+        },
+        "description": "Registra un nuevo usuario en el sistema. Guarda automáticamente el ID del usuario creado en la variable `user_id` de la colección para su uso en las siguientes peticiones."
+      },
+      "response": []
+    },
+    {
+      "name": "Iniciar Sesión",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Login exitoso\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "var jsonData = pm.response.json();",
+              "if (jsonData.token) {",
+              "    pm.collectionVariables.set(\"auth_token\", jsonData.token);",
+              "    console.log(\"Token guardado correctamente\");",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\": \"geovany@example.com\", \"password\": \"password123\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "login"
+          ]
+        },
+        "description": "Autentica al usuario con email y contraseña. Retorna el token JWT necesario para acceder a los endpoints protegidos."
+      },
+      "response": []
+    },
+    {
+      "name": "Obtener Todos los Usuarios",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Respuesta exitosa\", function () {",
+              "    pm.expect(pm.response.code).to.equal(200);",
+              "});",
+              "pm.test(\"La respuesta es un array o contiene datos\", function () {",
+              "    pm.expect(pm.response.json()).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "users"
+          ]
+        },
+        "description": "Obtiene la lista completa de todos los usuarios registrados en el sistema. No requiere parámetros adicionales."
+      },
+      "response": []
+    },
+    {
+      "name": "Obtener Usuario por ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Usuario encontrado\", function () {",
+              "    pm.expect(pm.response.code).to.equal(200);",
+              "});",
+              "pm.test(\"El usuario tiene ID\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"id\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/users/{{user_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "users",
+            "{{user_id}}"
+          ]
+        },
+        "description": "Obtiene los datos de un usuario específico usando su ID. Utiliza la variable de colección `user_id` que se establece automáticamente al registrar un usuario."
+      },
+      "response": []
+    },
+    {
+      "name": "Actualizar Usuario",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Actualización exitosa\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\": \"Geovany Actualizado\", \"email\": \"geovany.nuevo@example.com\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/users/{{user_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "users",
+            "{{user_id}}"
+          ]
+        },
+        "description": "Actualiza los datos de un usuario existente. Utiliza la variable `user_id` para identificar al usuario a modificar."
+      },
+      "response": []
+    },
+    {
+      "name": "Eliminar Usuario",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/users/{{user_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "users",
+            "{{user_id}}"
+          ]
+        },
+        "description": "Realiza un soft delete del usuario indicado por `user_id`. El registro no se elimina físicamente de la base de datos, solo se marca como inactivo."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "user_id",
+      "value": "d79aea18-bb2d-4cd0-abb5-6199ac28bd89"
+    }
+  ]
+}
