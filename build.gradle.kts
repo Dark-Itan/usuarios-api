@@ -24,7 +24,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
 
-
     // PostgreSQL Driver
     runtimeOnly("org.postgresql:postgresql")
 
@@ -35,6 +34,22 @@ dependencies {
     // Tests
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+}
+
+// Configuración del Fat JAR
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    archiveFileName.set("usuarios-api.jar")
+    mainClass.set("com.ejemplo.usuarios.UsuariosApplication")
+}
+
+// Deshabilitar el JAR plano
+tasks.named<Jar>("jar") {
+    enabled = false
+}
+
+// Asegurar que bootJar se ejecute en build
+tasks.named("build") {
+    dependsOn("bootJar")
 }
 
 tasks.withType<Test> {
